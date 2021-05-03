@@ -39,6 +39,9 @@ impl Tracker{
                 isupdatable=true;
                 self.write_file(&path,&tag_name);
             }
+            else{
+                println!("We are up to date");
+            }
         }
         let message = format!(
         "<strong>New Update is out</strong>\n<strong>\rAuthor:</strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name:</strong><code>{}</code>\n<strong>Release Tag:</strong><code>{}</code>\n<strong>Changelogs:</strong>\n<code>{}</code>\n<strong>Download:</strong><a href='{}'>{}</a>",

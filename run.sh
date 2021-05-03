@@ -1,5 +1,5 @@
 while true
 do 
-	cargo run
-	sleep 30
+	./target/release/release-track
+	sleep 120
 done
