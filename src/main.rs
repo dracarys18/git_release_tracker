@@ -13,7 +13,7 @@ fn run(){
     let client = reqwest::blocking::Client::new();
     for i in configs.getrepos(){
         let url = format!("https://api.github.com/repos/{}/releases/latest",i);
-        let access_token = configs.gettoken();
+        let access_token = configs.getgitoken();
         let token_header = format!("token{}",access_token);
         let req = client.get(url)
                 .header(USER_AGENT,"Tracker")
