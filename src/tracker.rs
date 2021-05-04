@@ -16,7 +16,7 @@ impl Tracker{
         }
     }
     pub fn write_file(&self,path:&str,name:&str){
-        fs::write(&path, &name).unwrap();
+        fs::write(&path, &name).expect("Unable to write the file");
     }
     pub fn parse_json_message(&self,json_text:serde_json::Value,s_filename:String)->(bool,String){
         let changelog = json_text.get("body").unwrap().as_str().unwrap();

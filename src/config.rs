@@ -8,9 +8,9 @@ pub struct Config{
 
 impl Config{
     pub fn new()->Self{
-        let chatid = env::var("CHAT_ID").unwrap();
-        let tok_en = env::var("BOT_TOKEN").unwrap();
-        let gitoken = env::var("GIT_API_TOKEN").unwrap();
+        let chatid = env::var("CHAT_ID").expect("CHAT_ID is not detected");
+        let tok_en = env::var("BOT_TOKEN").expect("BOT_TOKEN not detected");
+        let gitoken = env::var("GIT_API_TOKEN").expect("GIT_API_TOKEN not detected");
         let repo_s = vec!["dracarys18/NotKernel".to_string()];
         Config{
             chat_id:chatid,
