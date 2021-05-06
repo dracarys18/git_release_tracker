@@ -2,10 +2,15 @@ extern crate reqwest;
 mod tracker;
 mod config;
 use reqwest::header::USER_AGENT;
+use std::thread::sleep;
+use std::time::Duration;
 use tracker::Tracker;
 use config::Config;
 fn main() {
-    run();
+    loop{
+        run();
+        sleep(Duration::from_secs(120));
+    }
 }
 fn run(){
     let configs = Config::new();
@@ -13,11 +18,8 @@ fn run(){
     let client = reqwest::blocking::Client::new();
     for i in configs.getrepos(){
         let url = format!("https://api.github.com/repos/{}/releases/latest",i);
-        let access_token = configs.getgitoken();
-        let token_header = format!("token{}",access_token);
         let req = client.get(url)
                 .header(USER_AGENT,"Tracker")
-                .header("Authorization",&token_header)
                 .send()
                 .unwrap();
         let status = &req.status();

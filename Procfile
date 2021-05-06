@@ -1,1 +1,1 @@
-worker: bash run.sh
+worker: ./target/release/release-track
