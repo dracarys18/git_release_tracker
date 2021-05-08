@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 reqwest = { version = "*", features = ["blocking"] }
 serde_json = "*"
+dotenv = "*"

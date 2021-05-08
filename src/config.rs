@@ -1,4 +1,5 @@
 use std::env;
+use dotenv;
 pub struct Config{
     chat_id : String,
     token : String,
@@ -7,9 +8,20 @@ pub struct Config{
 
 impl Config{
     pub fn new()->Self{
-        let chatid = env::var("CHAT_ID").expect("CHAT_ID is not detected");
-        let tok_en = env::var("BOT_TOKEN").expect("BOT_TOKEN not detected");
-        let repo_s = vec!["dracarys18/NotKernel".to_string()];
+        let chatid = match env::var("CHAT_ID"){
+            Ok(val)=>val,
+            Err(_)=>dotenv::var("CHAT_ID").expect("CHAT_ID is Still Empty"),
+        };
+        let tok_en = match env::var("BOT_TOKEN"){
+            Ok(val)=>val,
+            Err(_)=>dotenv::var("BOT_TOKEN").expect("BOT_TOKEN is still Empty"),
+        };
+        let getrepo = match env::var("REPO_LIST"){
+            Ok(val)=>val,
+            Err(_)=>dotenv::var("REPO_LIST").expect("REPO_LIST is still empty"),
+        };
+        let split = getrepo.split(",");
+        let repo_s = split.map(|a| a.to_string()).collect::<Vec<String>>();
         Config{
             chat_id:chatid,
             token:tok_en,
