@@ -22,7 +22,7 @@ impl Config{
         };
         let split = getrepo.split(",");
         let repo_s = split.map(|a| a.to_string()).collect::<Vec<String>>();
-        Config{
+        Self{
             chat_id:chatid,
             token:tok_en,
             repos:repo_s,

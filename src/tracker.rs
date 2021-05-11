@@ -4,7 +4,7 @@ use std::fs;
 pub struct Tracker{}
 impl Tracker{
     pub fn new()->Self{
-        Tracker{}
+        Self{}
     }
     pub fn parse_resp_json(&self,txt:Option<String>,status:&str)->Option<serde_json::Value>{
         if txt.clone().map(|s| s=="[]").unwrap() || status!="200"{
@@ -55,23 +55,4 @@ impl Tracker{
         );
         return (isupdatable,message);
     }
-    pub fn post_to_telegram(&self,text:&str,token:&String,chat_id:&str){
-        let params = [
-            ("chat_id", chat_id),
-            ("text", text),
-            ("parse_mode", "HTML"),
-            ("disable_web_page_preview", "yes"),
-        ];
-        let url = format!("https://api.telegram.org/bot{}/sendMessage",&token);
-        let m = reqwest::blocking::Client::new();
-        let resp=m.post(url).form(&params).send().unwrap();
-        let status=resp.status();
-        let status_str = status.as_str();
-        if status_str=="200"{
-            println!("Message Sent");
-        }
-        else{
-            println!("Not sent Error Code\n{}",status);
-        }
-    } 
 }
