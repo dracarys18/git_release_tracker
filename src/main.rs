@@ -33,10 +33,12 @@ async fn run(){
         let chat_id = configs.getchatid().to_owned();
         let token = configs.gettoken().to_owned();
         let tgclient = TelegramClient::new(&chat_id, &token);
+        let spl = i.split("/");
+        let reponame = spl.map(|a| a).collect::<Vec<&str>>()[1];
         match json_text{
             Some(text)=>{
                 let filename = i.replace("/", "_");
-                let (updatable,message) = track.parse_json_message(text,filename);
+                let (updatable,message) = track.parse_json_message(text,filename,reponame);
                 if updatable{
                     tgclient.post_to_telegram(&message).await;
                 }

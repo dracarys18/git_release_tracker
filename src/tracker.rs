@@ -18,7 +18,7 @@ impl Tracker{
     pub fn write_file(&self,path:&str,name:&str){
         fs::write(&path, &name).expect("Unable to write the file");
     }
-    pub fn parse_json_message(&self,json_text:serde_json::Value,s_filename:String)->(bool,String){
+    pub fn parse_json_message(&self,json_text:serde_json::Value,s_filename:String,reponame:&str)->(bool,String){
         let changelog = json_text.get("body").unwrap().as_str().unwrap();
         let tag_name = json_text.get("tag_name").unwrap().as_str().unwrap();
         let release_name = json_text.get("name").unwrap().as_str().unwrap();
@@ -44,7 +44,10 @@ impl Tracker{
             }
         }
         let message = format!(
-        "<strong>New Update is out</strong>\n<strong>\rAuthor:</strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name:</strong><code>{}</code>\n<strong>Release Tag:</strong><code>{}</code>\n<strong>Changelogs:</strong>\n<code>{}</code>\n<strong>Download:</strong><a href='{}'>{}</a>",
+        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>\rAuthor:</strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name:</strong><code>{}</code>\n<strong>Release Tag:</strong><code>{}</code>\n<strong>Changelogs:</strong>\n<code>{}</code>\n<strong>Download:</strong><a href='{}'>{}</a>\n#{} #{}",
+        &uploader_name,
+        &reponame,
+        &reponame,
         &uploader_name,
         &uploader_name,
         &release_name,
@@ -52,6 +55,8 @@ impl Tracker{
         &changelog,
         &download_url,
         &file_name,
+        &tag_name,
+        &reponame,
         );
         return (isupdatable,message);
     }
