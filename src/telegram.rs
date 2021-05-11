@@ -16,8 +16,7 @@ impl<'tel> TelegramClient<'tel>{
         let url = format!("https://api.telegram.org/bot{}/getMe",self.token);
         let req = reqwest::Client::new();
         let resp = req.post(url).send().await.unwrap();
-        let cont = resp.text().await.unwrap();
-        let json:Value = serde_json::from_str(&cont).unwrap();
+        let json:Value = resp.json().await.unwrap();
         let bot_id = json.get("result").unwrap().get("id").unwrap().as_u64().unwrap().to_string();
         return bot_id;
     }
@@ -27,8 +26,7 @@ impl<'tel> TelegramClient<'tel>{
         let botid = self.get_bot_id().await;
         let param = [("chat_id",self.chat_id),("user_id",&botid)];
         let resp = req.post(url).form(&param).send().await.unwrap();
-        let cont = resp.text().await.unwrap();
-        let json:Value = serde_json::from_str(&cont).unwrap();
+        let json:Value = resp.json().await.unwrap();
         let can_pin_message = match json.get("result").unwrap().get("can_pin_messages").unwrap().as_bool(){
             Some(val)=>val,
             None=>false,
@@ -46,8 +44,7 @@ impl<'tel> TelegramClient<'tel>{
         let m = reqwest::Client::new();
         let resp=m.post(url).form(&params).send().await.unwrap();
         let status=resp.status();
-        let cont = resp.text().await.unwrap();
-        let json:Value = serde_json::from_str(&cont).unwrap();
+        let json:Value = resp.json().await.unwrap();
         let msg_id = json.get("result").unwrap().get("message_id").unwrap().as_str().unwrap();
         let status_str = status.as_str();
         if status_str=="200"{
