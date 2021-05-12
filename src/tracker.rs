@@ -7,7 +7,7 @@ impl Tracker{
         Self{}
     }
     pub fn parse_resp_json(&self,txt:Option<String>,status:&str)->Option<serde_json::Value>{
-        if txt.clone().map(|s| s=="[]").unwrap() || status!="200"{
+        if status!="200"{
             return None;
         }
         else{

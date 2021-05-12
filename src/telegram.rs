@@ -43,11 +43,10 @@ impl<'tel> TelegramClient<'tel>{
         let url = format!("https://api.telegram.org/bot{}/sendMessage",self.token);
         let m = reqwest::Client::new();
         let resp=m.post(url).form(&params).send().await.unwrap();
-        let status=resp.status();
+        let status=&resp.status().as_str().to_owned();
         let json:Value = resp.json().await.unwrap();
         let msg_id = json.get("result").unwrap().get("message_id").unwrap().as_str().unwrap();
-        let status_str = status.as_str();
-        if status_str=="200"{
+        if status=="200"{
             if self.can_pin_messages().await{
                 self.pin_message(msg_id).await;
                 println!("Message Sent and Pinned");

@@ -29,10 +29,9 @@ async fn run(){
                 .send()
                 .await
                 .unwrap();
-        let status = &req.status();
-        let status_str = status.as_str();
+        let status = &req.status().as_str().to_owned();
         let content = req.text().await.ok();
-        let json_text = track.parse_resp_json(content,status_str);
+        let json_text = track.parse_resp_json(content,status);
         let reponame = i.split("/").map(|a| a).collect::<Vec<&str>>()[1];
         match json_text{
             Some(text)=>{
