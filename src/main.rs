@@ -39,7 +39,7 @@ async fn run(){
                 let filename = i.replace("/", "_");
                 let (updatable,message) = track.parse_json_message(text,filename,reponame);
                 if updatable{
-                    tgclient.post_to_telegram(&message).await;
+                    tgclient.send_message(&message).await;
                 }
             },
             None=>println!("Failed to send the message")//track.post_to_telegram("Failed to get the message".to_string(),&token,&chat_id),

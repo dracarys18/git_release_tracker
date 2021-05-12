@@ -33,7 +33,7 @@ impl<'tel> TelegramClient<'tel>{
         };
         return can_pin_message
     }
-    pub async fn post_to_telegram(&self,text:&str){
+    pub async fn send_message(&self,text:&str){
         let params = [
             ("chat_id", self.chat_id),
             ("text", text),
