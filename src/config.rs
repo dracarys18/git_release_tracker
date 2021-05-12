@@ -20,8 +20,7 @@ impl Config{
             Ok(val)=>val,
             Err(_)=>dotenv::var("REPO_LIST").expect("REPO_LIST is still empty"),
         };
-        let split = getrepo.split(",");
-        let repo_s = split.map(|a| a.to_string()).collect::<Vec<String>>();
+        let repo_s = getrepo.split(",").map(|a| a.to_string()).collect::<Vec<String>>();
         Self{
             chat_id:chatid,
             token:tok_en,
