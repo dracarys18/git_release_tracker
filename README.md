@@ -9,5 +9,10 @@ API_TOKEN="" //API Token of the bot
 REPO_LIST="" //List of repos seperated by comma(,) with format &ltusername&gt/&ltreponame&gt
 </pre>
 </li>
-<li> And finally run the bot using <code>bash run.sh</code></li>
+<li>Install cargo using by running
+<pre>
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+</pre>
+</li>
+<li> And finally run the bot using <code>cargo run</code></li>
 </ol>
