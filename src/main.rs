@@ -32,7 +32,10 @@ async fn run(){
         let status = &req.status().as_str().to_owned();
         let content = req.text().await.ok();
         let json_text = track.parse_resp_json(content,status);
-        let reponame = i.split("/").map(|a| a).collect::<Vec<&str>>()[1];
+        let reponame = match i.split("/").map(|a| a).collect::<Vec<&str>>().get(1){
+            Some(val)=>*val,
+            None=>panic!("The repo name is empty that means you havent defined it in proper format\nThe format is <username>/<reponame>"),
+        };
         match json_text{
             Some(text)=>{
                 let filename = i.replace("/", "_");
