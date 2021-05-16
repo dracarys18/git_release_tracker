@@ -17,6 +17,16 @@ impl Tracker {
     pub fn write_file(&self, path: &str, name: &str) {
         fs::write(&path, &name).expect("Unable to write the file");
     }
+    pub fn get_assets(&self, asset_json: &Vec<serde_json::Value>) -> String {
+        let mut asset_str = String::from("");
+        for i in asset_json {
+            let download = i.get("browser_download_url").unwrap().as_str().unwrap();
+            let name = i.get("name").unwrap().as_str().unwrap();
+            let txt = format!("•<a href='{}'>{}</a>\n", download, name);
+            asset_str.push_str(&txt);
+        }
+        return asset_str;
+    }
     pub fn parse_json_message(
         &self,
         json_text: serde_json::Value,
@@ -26,14 +36,11 @@ impl Tracker {
         let changelog = json_text.get("body").unwrap().as_str().unwrap();
         let tag_name = json_text.get("tag_name").unwrap().as_str().unwrap();
         let release_name = json_text.get("name").unwrap().as_str().unwrap();
-        let releases = json_text.get("assets").unwrap().get(0).unwrap();
-        let download_url = releases
-            .get("browser_download_url")
-            .unwrap()
-            .as_str()
-            .unwrap();
-        let file_name = releases.get("name").unwrap().as_str().unwrap();
+        let releases = json_text.get("assets").unwrap().as_array().unwrap();
+        let download_text = self.get_assets(releases);
         let uploader_name = releases
+            .get(0)
+            .unwrap()
             .get("uploader")
             .unwrap()
             .get("login")
@@ -56,7 +63,7 @@ impl Tracker {
             }
         }
         let message = format!(
-        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>\rAuthor:</strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name:</strong><code>{}</code>\n<strong>Release Tag:</strong><code>{}</code>\n<strong>Changelogs:</strong>\n<code>{}</code>\n<strong>Download:</strong><a href='{}'>{}</a>\n#{} #{}",
+        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>Author:</strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name:</strong><code>{}</code>\n<strong>Release Tag:</strong><code>{}</code>\n<strong>Changelogs:</strong>\n<code>{}</code>\n<strong>Downloads:</strong>\n{}#{} #{}",
         &uploader_name,
         &reponame,
         &reponame,
@@ -65,8 +72,7 @@ impl Tracker {
         &release_name,
         &tag_name,
         &changelog,
-        &download_url,
-        &file_name,
+        &download_text,
         &tag_name,
         &reponame,
         );
