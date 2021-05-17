@@ -12,6 +12,7 @@ impl<'tel> TelegramClient<'tel> {
             chat_id: chat_id,
         }
     }
+    /// Get the userid of the bot
     pub async fn get_bot_id(&self) -> String {
         let url = format!("https://api.telegram.org/bot{}/getMe", self.token);
         let req = reqwest::Client::new();
@@ -27,6 +28,7 @@ impl<'tel> TelegramClient<'tel> {
             .to_string();
         return bot_id;
     }
+    /// Check if the bot can pin the messages or not in the group/channel
     pub async fn can_pin_messages(&self) -> bool {
         let url = format!("https://api.telegram.org/bot{}/getChatMember", self.token);
         let req = reqwest::Client::new();

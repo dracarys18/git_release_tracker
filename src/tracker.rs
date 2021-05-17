@@ -6,6 +6,8 @@ impl Tracker {
     pub fn new() -> Self {
         Self {}
     }
+    /// Parses the Ok(json) into readable form if the response is not empty returns None if the
+    /// respone is empty.
     pub fn parse_resp_json(&self, txt: Option<String>, status: &str) -> Option<serde_json::Value> {
         if status != "200" {
             return None;
@@ -27,6 +29,15 @@ impl Tracker {
         }
         return asset_str;
     }
+    /// Parses the json into telegram message in the form:-
+    /// ```
+    /// New <repo-name> Update is out
+    /// Author: //author name who released the build
+    /// Release Name: //release name
+    /// Release Tag: //tag name
+    /// Changelogs: //release changelog
+    /// Downloads: //URLs of download assets
+    /// ```
     pub fn parse_json_message(
         &self,
         json_text: serde_json::Value,
