@@ -74,7 +74,7 @@ impl Tracker {
             }
         }
         let message = format!(
-        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>Author:</strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name:</strong><code>{}</code>\n<strong>Release Tag:</strong><code>{}</code>\n<strong>Changelogs:</strong>\n<code>{}</code>\n<strong>Downloads:</strong>\n{}#{} #{}",
+        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>Author: </strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name: </strong><code>{}</code>\n<strong>Release Tag: </strong><code>{}</code>\n<strong>Changelogs: </strong>\n<code>{}</code>\n<strong>Downloads: </strong>\n{}#{} #{}",
         &uploader_name,
         &reponame,
         &reponame,

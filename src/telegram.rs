@@ -65,11 +65,12 @@ impl<'tel> TelegramClient<'tel> {
             .unwrap()
             .get("message_id")
             .unwrap()
-            .as_str()
-            .unwrap();
+            .as_i64()
+            .unwrap()
+            .to_string();
         if status == "200" {
             if self.can_pin_messages().await {
-                self.pin_message(msg_id).await;
+                self.pin_message(&msg_id).await;
                 println!("Message Sent and Pinned");
             } else {
                 println!("Message sent");
