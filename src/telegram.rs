@@ -1,5 +1,6 @@
 extern crate reqwest;
 use serde_json::Value;
+
 pub struct TelegramClient<'tel> {
     token: &'tel str,
     chat_id: &'tel str,
@@ -28,6 +29,18 @@ impl<'tel> TelegramClient<'tel> {
             .to_string();
         return bot_id;
     }
+    pub async fn get_chat_type(&self) -> String {
+        let url = format!("https://api.telegram.org/bot{}/getChat", self.token);
+        let req = reqwest::Client::new();
+        let param = [("chat_id", self.chat_id)];
+        let resp = req.post(url).form(&param).send().await.unwrap();
+        let json: Value = resp.json().await.unwrap();
+        let chat_type = match json.get("result").unwrap().get("type").unwrap().as_str() {
+            Some(val) => val.to_string(),
+            None => "".to_string(),
+        };
+        return chat_type;
+    }
     /// Check if the bot can pin the messages or not in the group/channel
     pub async fn can_pin_messages(&self) -> bool {
         let url = format!("https://api.telegram.org/bot{}/getChatMember", self.token);
@@ -36,16 +49,31 @@ impl<'tel> TelegramClient<'tel> {
         let param = [("chat_id", self.chat_id), ("user_id", &botid)];
         let resp = req.post(url).form(&param).send().await.unwrap();
         let json: Value = resp.json().await.unwrap();
-        let can_pin_message = match json
-            .get("result")
-            .unwrap()
-            .get("can_pin_messages")
-            .unwrap()
-            .as_bool()
-        {
-            Some(val) => val,
-            None => false,
-        };
+        let chatype = self.get_chat_type().await;
+        let can_pin_message;
+        if &chatype != "channel" {
+            can_pin_message = match json
+                .get("result")
+                .unwrap()
+                .get("can_pin_messages")
+                .unwrap()
+                .as_bool()
+            {
+                Some(val) => val,
+                None =>false,
+            };
+        } else {
+            can_pin_message = match json
+                .get("result")
+                .unwrap()
+                .get("can_edit_messages")
+                .unwrap()
+                .as_bool()
+            {
+                Some(val) => val,
+                None => false,
+            };
+        }
         return can_pin_message;
     }
     pub async fn send_message(&self, text: &str) {
