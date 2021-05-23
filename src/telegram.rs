@@ -60,7 +60,7 @@ impl<'tel> TelegramClient<'tel> {
                 .as_bool()
             {
                 Some(val) => val,
-                None =>false,
+                None => false,
             };
         } else {
             can_pin_message = match json

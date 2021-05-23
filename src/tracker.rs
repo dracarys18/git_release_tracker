@@ -20,7 +20,7 @@ impl Tracker {
         fs::write(&path, &name).expect("Unable to write the file");
     }
     pub fn get_assets(&self, asset_json: &Vec<serde_json::Value>) -> String {
-        let mut asset_str = String::from("");
+        let mut asset_str = String::from("<strong>Downloads: </strong>\n");
         for i in asset_json {
             let download = i.get("browser_download_url").unwrap().as_str().unwrap();
             let name = i.get("name").unwrap().as_str().unwrap();
@@ -47,17 +47,20 @@ impl Tracker {
         let changelog = json_text.get("body").unwrap().as_str().unwrap();
         let tag_name = json_text.get("tag_name").unwrap().as_str().unwrap();
         let release_name = json_text.get("name").unwrap().as_str().unwrap();
-        let releases = json_text.get("assets").unwrap().as_array().unwrap();
-        let download_text = self.get_assets(releases);
-        let uploader_name = releases
-            .get(0)
-            .unwrap()
-            .get("uploader")
+        let uploader_name = json_text
+            .get("author")
             .unwrap()
             .get("login")
             .unwrap()
             .as_str()
             .unwrap();
+        let release = json_text.get("assets").unwrap().as_array().unwrap();
+        let download_text;
+        if release.len() != 0 {
+            download_text = self.get_assets(release);
+        } else {
+            download_text = "".to_string();
+        }
         let path = format!("src/data/{}", s_filename);
         let mut isupdatable: bool = false;
         if !Path::new(&path).exists() {
@@ -74,7 +77,7 @@ impl Tracker {
             }
         }
         let message = format!(
-        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>Author: </strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name: </strong><code>{}</code>\n<strong>Release Tag: </strong><code>{}</code>\n<strong>Changelogs: </strong>\n<code>{}</code>\n<strong>Downloads: </strong>\n{}#{} #{}",
+        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>Author: </strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name: </strong><code>{}</code>\n<strong>Release Tag: </strong><code>{}</code>\n<strong>Changelogs: </strong>\n<code>{}</code>\n{}#{} #{}",
         &uploader_name,
         &reponame,
         &reponame,
