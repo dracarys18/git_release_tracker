@@ -44,7 +44,13 @@ impl Tracker {
         s_filename: String,
         reponame: &str,
     ) -> (bool, String) {
-        let changelog = json_text.get("body").unwrap().as_str().unwrap();
+        let body = json_text.get("body").unwrap().as_str().unwrap();
+        let changelog;
+        if body.len() != 0 {
+            changelog = body;
+        } else {
+            changelog = "<strong>No Changelogs</strong>";
+        }
         let tag_name = json_text.get("tag_name").unwrap().as_str().unwrap();
         let release_name = json_text.get("name").unwrap().as_str().unwrap();
         let uploader_name = json_text
