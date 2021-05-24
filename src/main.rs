@@ -1,3 +1,4 @@
+extern crate pretty_bytes;
 extern crate reqwest;
 mod config;
 mod telegram;

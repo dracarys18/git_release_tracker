@@ -11,3 +11,4 @@ reqwest = {version="*",features= ["json"]}
 serde_json = "*"
 dotenv = "*"
 tokio = { version = "*", features = ["full"] }
+pretty-bytes = "0.2.2"

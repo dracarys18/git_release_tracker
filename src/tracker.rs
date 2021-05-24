@@ -1,3 +1,4 @@
+use pretty_bytes::converter::convert;
 use serde_json::Value;
 use std::fs;
 use std::path::Path;
@@ -24,7 +25,13 @@ impl Tracker {
         for i in asset_json {
             let download = i.get("browser_download_url").unwrap().as_str().unwrap();
             let name = i.get("name").unwrap().as_str().unwrap();
-            let txt = format!("•<a href='{}'>{}</a>\n", download, name);
+            let size = i.get("size").unwrap().as_f64().unwrap();
+            let txt = format!(
+                "•<a href='{}'>{}</a> (<strong>{}</strong>)\n",
+                download,
+                name,
+                convert(size)
+            );
             asset_str.push_str(&txt);
         }
         return asset_str;
