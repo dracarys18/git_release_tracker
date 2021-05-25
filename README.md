@@ -2,7 +2,7 @@
 This is used to track Releases posted on GitHub Releases and Post it on a Telegram Channel/Group.
 <h2>Setup</h2>
 <ol>
-<li>Export env variables or just fill the .env file
+<li>Export env variables or just fill the .env-sample file and rename it to .env
 <pre>
 CHAT_ID="" //ID of the chat where you wanna set the alert to
 API_TOKEN="" //API Token of the bot
