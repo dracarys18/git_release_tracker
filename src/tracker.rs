@@ -20,6 +20,19 @@ impl Tracker {
     pub fn write_file(&self, path: &str, name: &str) {
         fs::write(&path, &name).expect("Unable to write the file");
     }
+    pub fn escape_html(&self, txt: &str) -> String {
+        let mut tmp = String::from("");
+        for i in txt.chars() {
+            match i {
+                '&' => tmp.push_str("&amp;"),
+                '\"' => tmp.push_str("&quot;"),
+                '<' => tmp.push_str("&lt;"),
+                '>' => tmp.push_str("&gt;"),
+                _ => tmp.push_str(&i.to_string()),
+            }
+        }
+        return tmp;
+    }
     pub fn get_assets(&self, asset_json: &Vec<serde_json::Value>) -> String {
         let mut asset_str = String::from("<strong>Downloads: </strong>\n");
         for i in asset_json {
@@ -54,12 +67,12 @@ impl Tracker {
         let body = json_text.get("body").unwrap().as_str().unwrap();
         let changelog;
         if body.len() != 0 {
-            changelog = body;
+            changelog = self.escape_html(body);
         } else {
-            changelog = "<strong>No Changelogs</strong>";
+            changelog = "<strong>No Changelogs</strong>".to_string();
         }
-        let tag_name = json_text.get("tag_name").unwrap().as_str().unwrap();
-        let release_name = json_text.get("name").unwrap().as_str().unwrap();
+        let tag_name = self.escape_html(json_text.get("tag_name").unwrap().as_str().unwrap());
+        let release_name = self.escape_html(json_text.get("name").unwrap().as_str().unwrap());
         let uploader_name = json_text
             .get("author")
             .unwrap()
@@ -81,7 +94,7 @@ impl Tracker {
             isupdatable = true;
         } else {
             let current_ver = fs::read_to_string(&path).unwrap();
-            let updated_ver = String::from(tag_name);
+            let updated_ver = String::from(&tag_name);
             if current_ver != updated_ver {
                 isupdatable = true;
                 self.write_file(&path, &tag_name);
