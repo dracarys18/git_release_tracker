@@ -1,4 +1,5 @@
 use pretty_bytes::converter::convert;
+use regex::Regex;
 use serde_json::Value;
 use std::fs;
 use std::path::Path;
@@ -21,17 +22,23 @@ impl Tracker {
         fs::write(&path, &name).expect("Unable to write the file");
     }
     pub fn escape_html(&self, txt: &str) -> String {
-        let mut tmp = String::from("");
-        for i in txt.chars() {
-            match i {
-                '&' => tmp.push_str("&amp;"),
-                '\"' => tmp.push_str("&quot;"),
-                '<' => tmp.push_str("&lt;"),
-                '>' => tmp.push_str("&gt;"),
-                _ => tmp.push_str(&i.to_string()),
+        let re = Regex::new(r#"[&'"<>]"#).unwrap();
+        if re.is_match(txt) {
+            let mut tmp = String::from("");
+            for i in txt.chars() {
+                match i {
+                    '&' => tmp.push_str("&amp;"),
+                    '\"' => tmp.push_str("&quot;"),
+                    '<' => tmp.push_str("&lt;"),
+                    '>' => tmp.push_str("&gt;"),
+                    '\'' => tmp.push_str("&#39;"),
+                    _ => tmp.push_str(&i.to_string()),
+                }
             }
+            return tmp;
+        } else {
+            return txt.to_owned();
         }
-        return tmp;
     }
     pub fn get_assets(&self, asset_json: &Vec<serde_json::Value>) -> String {
         let mut asset_str = String::from("<strong>Downloads: </strong>\n");
