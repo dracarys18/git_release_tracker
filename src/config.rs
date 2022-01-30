@@ -1,4 +1,3 @@
-use dotenv;
 use std::env;
 pub struct Config {
     chat_id: String,

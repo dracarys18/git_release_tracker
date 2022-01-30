@@ -80,6 +80,14 @@ impl Tracker {
         }
         let tag_name = self.escape_html(json_text.get("tag_name").unwrap().as_str().unwrap());
         let release_name = self.escape_html(json_text.get("name").unwrap().as_str().unwrap());
+        let repo_link = json_text
+            .get("html_url")
+            .unwrap()
+            .as_str()
+            .unwrap()
+            .split("releases")
+            .collect::<Vec<&str>>()[0];
+        let author_link = json_text.get("author").unwrap().get("html_url").unwrap().as_str().unwrap();
         let uploader_name = json_text
             .get("author")
             .unwrap()
@@ -110,11 +118,10 @@ impl Tracker {
             }
         }
         let message = format!(
-        "<strong>New <a href='https://github.com/{}/{}'>{}</a> Update is out</strong>\n<strong>Author: </strong><a href='https://github.com/{}'>{}</a>\n<strong>Release Name: </strong><code>{}</code>\n<strong>Release Tag: </strong><code>{}</code>\n<strong>Changelogs: </strong>\n<code>{}</code>\n{}#{} #{}",
-        &uploader_name,
+        "<strong>New <a href='{}'>{}</a> Update is out</strong>\n<strong>Author: </strong><a href='{}'>{}</a>\n<strong>Release Name: </strong><code>{}</code>\n<strong>Release Tag: </strong><code>{}</code>\n<strong>Changelogs: </strong>\n<code>{}</code>\n{}#{} #{}",
+        &repo_link,
         &reponame,
-        &reponame,
-        &uploader_name,
+        &author_link,
         &uploader_name,
         &release_name,
         &tag_name,
